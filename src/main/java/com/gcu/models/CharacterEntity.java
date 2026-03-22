@@ -32,10 +32,10 @@ public class CharacterEntity
     @Column(name = "character_type", nullable = false)
     private String characterType;
 
-    @Column(name = "character_description")
+    @Column(name = "character_description", columnDefinition = "TEXT")
     private String characterDescription;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
     @Column(name = "created_on")
