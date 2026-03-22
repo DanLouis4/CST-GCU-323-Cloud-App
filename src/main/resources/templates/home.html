@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultTemplate}">
+<head>
+    <title>RPG Character Tracker | Home</title>
+</head>
+
+<body>
+
+<section layout:fragment="content" class="container mt-5 text-center">
+
+    <h1>Welcome to the RPG Character Tracker.</h1>
+    <p>Cloud App - My Characters</p>
+
+    <a class="btn btn-primary mt-3"
+       th:href="@{/characters}">
+        View Characters
+    </a>
+
+</section>
+
+</body>
+</html>

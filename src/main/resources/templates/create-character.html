@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultTemplate}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Character</title>
+</head>
+<body>
+	
+	<section layout:fragment="content" class="container mt-5">	
+		
+	<div class="container-fluid">
+	    <div class="page-shell">
+	
+	        <h1 class="page-title">Create a Character</h1>
+	        <p class="page-subtitle">
+	            Enter the character details below to create a new Character profile.
+	        </p>
+	
+	        <form th:action="@{/characters/create}" th:object="${character}" method="post">
+	            <div class="row g-5 text-left">
+	                <div class="col-lg-5 left-column">
+	                    <div class="row mb-4">
+							<div class="col-7">
+	                        	<label for="name" class="form-label-sm">Name</label>
+	                        	<input type="text" id="name" class="form-control form-control-sm rounded-2" th:field="*{characterName}">
+							</div>
+							<div class="col-5">
+							    <label for="level" class="form-label-sm">Level</label>
+							    <input type="number" id="level" class="form-control form-control-sm rounded-2" min="1" th:field="*{characterLevel}">
+							</div>							
+	                    </div>
+	
+	                    <div class="row mb-4">
+	                        <div class="col-7">
+	                            <label for="characterClass" class="form-label-sm">Class</label>
+	                            <select id="characterClass" class="form-select form-select-sm rounded-2" th:field="*{characterClass.classId}">
+	                                <option value="">Select Class</option>
+	                                <option th:each="characterClass : ${classes}"
+	                                        th:value="${characterClass.classId}"
+	                                        th:text="${characterClass.className}">
+	                                    Class Name
+	                                </option>
+	                            </select>
+	                        </div>
+							<div class="col-5">
+								<label for="characterType" class="form-label-sm">Type</label>
+								<select id="characterType" class="form-select form-select-sm rounded-2" th:field="*{characterType}">
+									<option value="">Select Type</option>
+									<option value="Player">Player</option>
+									<option value="NPC">NPC</option>
+									<option value="Monster">Monster</option>
+								</select>
+							</div>
+	                    </div>
+	
+	                    <div class="row mb-4">
+	                        <div class="col-6">
+	                            <label for="race" class="form-label-sm">Race</label>
+	                            <select id="race" class="form-select form-select-sm rounded-2" th:field="*{race.raceId}">
+	                                <option value="">Select Race</option>
+	                                <option th:each="race : ${races}"
+	                                        th:value="${race.raceId}"
+	                                        th:text="${race.raceName}">
+	                                    Race Name
+	                                </option>
+	                            </select>
+	                        </div>
+	                        <div class="col-6">
+	                            <label for="gender" class="form-label-sm">Gender</label>
+	                            <select id="gender" class="form-select form-select-sm rounded-2" th:field="*{characterGender}">
+	                                <option value="">Select Gender</option>
+	                                <option value="Male">Male</option>
+	                                <option value="Female">Female</option>
+	                                <option value="Other">Other</option>
+	                            </select>
+	                        </div>
+	                    </div>
+	
+	                    <div class="mb-4">
+	                        <label for="imageUrl" class="form-label-sm">Image URL</label>
+	                        <input type="text" id="imageUrl" class="form-control form-control-sm rounded-2" th:field="*{imageUrl}" oninput="updatePreview(this.value)">
+	                    </div>
+	
+	                    <div class="preview-box" id="previewBox">
+	                        <span id="previewText">Image Preview</span>
+	                        <img id="previewImage" alt="Character preview" style="display:none;">
+	                    </div>
+	                </div>
+	
+	                <div class="col-lg-7">
+	                    <label for="description" class="form-label-sm">Description</label>
+	                    <textarea id="description" class="form-control" th:field="*{characterDescription}"></textarea>
+	                </div>
+	            </div>
+	
+	            <div class="actions">
+	                <button type="submit" class="btn btn-success btn-action">CREATE</button>
+	                <a th:href="@{/characters}" class="btn btn-danger btn-action">CANCEL</a>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+	
+<script>
+    function updatePreview(url) {
+        const img = document.getElementById('previewImage');
+        const text = document.getElementById('previewText');
+
+        if (!url || url.trim() === '') {
+            img.style.display = 'none';
+            img.src = '';
+            text.style.display = 'block';
+            return;
+        }
+
+        img.src = url;
+        img.style.display = 'block';
+        text.style.display = 'none';
+
+        img.onerror = function () {
+            img.style.display = 'none';
+            text.style.display = 'block';
+            text.textContent = 'Invalid Image URL';
+        };
+
+        img.onload = function () {
+            text.textContent = 'Image Preview';
+        };
+    }
+</script>
+</section>
+</body>
+</html>

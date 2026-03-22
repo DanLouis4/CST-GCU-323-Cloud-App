@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultTemplate}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Character</title>
+</head>
+<body>
+
+<section layout:fragment="content" class="container mt-4">
+
+    <div class="container-fluid">
+        <div class="view-character-shell">
+
+            <div class="view-top-bar">
+                <a th:href="@{/characters}" class="back-link">
+                    <i class="bi bi-chevron-left"></i> BACK TO CHARACTERS
+                </a>
+            </div>
+
+            <h1 class="view-character-title"
+                th:text="${character.characterName}">
+                CHARACTER NAME
+            </h1>
+
+            <div class="view-content-flow">
+
+                <div class="character-image-frame">
+                    <img th:if="${character.imageUrl != null and !#strings.isEmpty(character.imageUrl)}"
+                         th:src="${character.imageUrl}"
+                         th:alt="${character.characterName}"
+                         class="character-view-image">
+
+                    <div th:if="${character.imageUrl == null or #strings.isEmpty(character.imageUrl)}"
+                         class="character-image-placeholder">
+                        No Image Available
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+
+                    <div class="stat-block">
+                        <div class="stat-label">Class</div>
+                        <div class="stat-value"
+                             th:text="${character.characterClass != null ? character.characterClass.className : '[className]'}">
+                            [className]
+                        </div>
+                    </div>
+
+                    <div class="stat-block">
+                        <div class="stat-label">Level</div>
+                        <div class="stat-value"
+                             th:text="${character.characterLevel != null ? character.characterLevel : '[level]'}">
+                            [level]
+                        </div>
+                    </div>
+
+                    <div class="stat-block">
+                        <div class="stat-label">Race</div>
+                        <div class="stat-value"
+                             th:text="${character.race != null ? character.race.raceName : '[raceName]'}">
+                            [raceName]
+                        </div>
+                    </div>
+
+                    <div class="stat-block">
+                        <div class="stat-label">Gender</div>
+                        <div class="stat-value"
+                             th:text="${character.characterGender != null ? character.characterGender : '[gender]'}">
+                            [gender]
+                        </div>
+                    </div>
+
+                    <div class="stat-block">
+                        <div class="stat-label">Type</div>
+                        <div class="stat-value"
+                             th:text="${character.characterType != null ? character.characterType : '[type]'}">
+                            [type]
+                        </div>
+                    </div>
+
+                    <div class="stat-block description-block">
+                        <div class="stat-label">Description</div>
+                    </div>
+                    
+                </div>
+                    <div class="description-text"
+                        th:text="${character.characterDescription != null and !#strings.isEmpty(character.characterDescription) ? character.characterDescription : 'No description available.'}">
+                        Lorem ipsum...
+                    </div>
+
+
+                <div class="content-clear"></div>
+            </div>
+
+            <div class="view-actions">
+                <a th:href="@{/characters/edit/{id}(id=${character.characterId})}"
+                   class="btn btn-success view-action-btn">
+                    <i class="bi bi-pencil"></i> EDIT
+                </a>
+
+                <a th:href="@{/characters/delete/{id}(id=${character.characterId})}"
+                   class="btn btn-danger view-action-btn"
+                   onclick="return confirm('Are you sure you want to delete this character?');">
+                    <i class="bi bi-trash"></i> DELETE
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+</body>
+</html>
