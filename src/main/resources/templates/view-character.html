@@ -95,7 +95,8 @@
                 <div class="content-clear"></div>
             </div>
 
-            <div class="view-actions">
+            <div class="view-actions"
+                 th:if="${session.user != null and character.user != null and session.user.userId == character.user.userId}">
                 <a th:href="@{/characters/edit/{id}(id=${character.characterId})}"
                    class="btn btn-success view-action-btn">
                     <i class="bi bi-pencil"></i> EDIT

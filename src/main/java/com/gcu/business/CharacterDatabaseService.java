@@ -19,7 +19,6 @@ import com.gcu.models.UserEntity;
 public class CharacterDatabaseService
 {
     private final CharacterRepository characterRepository;
-    private final UserRepository userRepository;
     private final RaceRepository raceRepository;
     private final ClassRepository classRepository;
 
@@ -30,7 +29,6 @@ public class CharacterDatabaseService
             ClassRepository classRepository)
     {
         this.characterRepository = characterRepository;
-        this.userRepository = userRepository;
         this.raceRepository = raceRepository;
         this.classRepository = classRepository;
     }
@@ -40,17 +38,40 @@ public class CharacterDatabaseService
         return characterRepository.findAll();
     }
 
+    public List<CharacterEntity> getVisibleCharacters(UserEntity user)
+{
+    List<CharacterEntity> allCharacters = characterRepository.findAll();
+
+    if (user == null)
+    {
+        return allCharacters.stream()
+                .filter(character -> character.getVisibility() == 0)
+                .toList();
+    }
+
+    return allCharacters.stream()
+            .filter(character ->
+                    character.getVisibility() == 0 ||
+                    (character.getUser() != null &&
+                     character.getUser().getUserId().equals(user.getUserId())))
+            .toList();
+}
+
     public CharacterEntity findById(int id)
     {
         Optional<CharacterEntity> entity = characterRepository.findById(id);
         return entity.orElse(null);
     }
 
-    public void addCharacter(CharacterEntity character)
+    public void addCharacter(CharacterEntity character, UserEntity user)
     {
-        UserEntity user = userRepository.findById(1).orElse(null);
         RaceEntity race = raceRepository.findById(character.getRace().getRaceId()).orElse(null);
         ClassEntity charClass = classRepository.findById(character.getCharacterClass().getClassId()).orElse(null);
+
+        if (character.getVisibility() == null)
+        {
+            character.setVisibility(0); // Default to public if not set
+        }   
 
         character.setUser(user);
         character.setRace(race);
@@ -76,6 +97,7 @@ public class CharacterDatabaseService
             entity.setCharacterType(character.getCharacterType());
             entity.setCharacterDescription(character.getCharacterDescription());
             entity.setImageUrl(character.getImageUrl());
+            entity.setVisibility(character.getVisibility());
 
             RaceEntity race = raceRepository.findById(character.getRace().getRaceId()).orElse(null);
             ClassEntity charClass = classRepository.findById(character.getCharacterClass().getClassId()).orElse(null);

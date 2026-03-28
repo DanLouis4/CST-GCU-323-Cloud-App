@@ -13,6 +13,12 @@ target/
 .springBeans
 .sts4-cache
 
+# Spring Boot Sensitive Configuration Files
+src/main/resources/application-dev.properties
+src/main/resources/application-heroku.properties
+src/main/resources/application-azure.properties
+src/main/resources/application.properties.bak
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

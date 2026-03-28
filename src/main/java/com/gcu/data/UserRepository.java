@@ -5,4 +5,5 @@ import com.gcu.models.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer>
 {
+    public UserEntity findByUsername(String username);
 }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultTemplate}">
+
+<head>
+    <title>Sign In</title>
+</head>
+
+<body>
+
+<section layout:fragment="content" class="container mt-5 text-center">
+
+    <h1 class="mb-4">Sign In</h1>
+
+    <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/signin}" method="post" class="w-50 mx-auto">
+
+        <div class="mb-3 text-start">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+
+        <div class="mb-3 text-start">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+
+    </form>
+
+    <div class="mt-3">
+        <p>Don't have an account? <a th:href="@{/signup}" class="text-decoration-none">Sign up here</a>.</p>
+    </div>
+
+</section>
+
+</body>
+</html>
