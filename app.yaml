@@ -1,0 +1,7 @@
+runtime: java17
+env: flex
+
+env_variables:
+  DB_URL: "jdbc:mysql://136.111.172.163:3306/rpg_characters"
+  DB_USER: "cst323admin"
+  DB_PASS: "Gilberty7!"
