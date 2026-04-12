@@ -14,11 +14,145 @@
 	    <h1 class="mb-0">Characters</h1>
 	</div>
 	
+	<!-- SEARCH, SORT, AND DISPLAY OPTIONS -->
+	<div class="accordion character-tools-accordion mb-4" id="characterToolsAccordion">
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="characterToolsHeading">
+				<button class="accordion-button" type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#characterToolsCollapse"
+						aria-expanded="true"
+						aria-controls="characterToolsCollapse">
+					Search, Sort, and Display Options
+				</button>
+			</h2>
+
+			<div id="characterToolsCollapse"
+				class="accordion-collapse collapse"
+				aria-labelledby="characterToolsHeading"
+				data-bs-parent="#characterToolsAccordion">
+				<div class="accordion-body">
+
+					<form id="characterSearchForm" th:action="@{/characters}" method="get" class="mb-3">
+						<div class="character-toolbar mx-auto">
+
+							<div class="character-search-block">
+								<label for="keyword" class="form-label form-label-sm text-start w-100">Search</label>
+								<div class="input-group">
+									<input type="text"
+										id="keyword"
+										name="keyword"
+										class="form-control"
+										placeholder="Search characters or use field:value (e.g., gender:male, race:elf)"
+										th:value="${keyword}">
+									<button class="btn btn-outline-secondary" type="submit">Search</button>
+								</div>
+								<div class="form-text text-center">
+									Enter a keyword to search all fields.<br>
+									Use <strong>field:value</strong> for precise search (e.g., gender:male, type:player).
+								</div>
+							</div>
+
+							<div class="character-sort-block">
+								<label for="sortBy" class="form-label form-label-sm text-start w-100">Sort By</label>
+								<div class="input-group">
+									<select id="sortBy" name="sortBy" class="form-select" onchange="this.form.submit()">
+										<option value="">Default</option>
+										<option value="newest" th:selected="${sortBy == 'newest'}">Newest First</option>
+										<option value="oldest" th:selected="${sortBy == 'oldest'}">Oldest First</option>
+										<option value="nameAsc" th:selected="${sortBy == 'nameAsc'}">Name A-Z</option>
+										<option value="nameDesc" th:selected="${sortBy == 'nameDesc'}">Name Z-A</option>
+										<option value="levelAsc" th:selected="${sortBy == 'levelAsc'}">Level Low-High</option>
+										<option value="levelDesc" th:selected="${sortBy == 'levelDesc'}">Level High-Low</option>
+										<option value="raceAsc" th:selected="${sortBy == 'raceAsc'}">Race A-Z</option>
+										<option value="raceDesc" th:selected="${sortBy == 'raceDesc'}">Race Z-A</option>
+										<option value="classAsc" th:selected="${sortBy == 'classAsc'}">Class A-Z</option>
+										<option value="classDesc" th:selected="${sortBy == 'classDesc'}">Class Z-A</option>
+										<option value="typeAsc" th:selected="${sortBy == 'typeAsc'}">Type A-Z</option>
+										<option value="typeDesc" th:selected="${sortBy == 'typeDesc'}">Type Z-A</option>
+									</select>
+
+									<button type="button"
+											class="btn btn-outline-secondary"
+											th:onclick="|window.location.href='@{/characters}'|">
+										Clear
+									</button>
+								</div>
+								<div class="form-text text-center">
+									Sort visible search results.<br>
+									Choose a field and order.
+								</div>
+							</div>
+
+						</div>
+					</form>
+
+					<div class="owner-priority-box"
+						th:if="${session.user != null}">
+						<div class="owner-priority-title">My Character Placement</div>
+
+						<div class="owner-priority-options">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input"
+									type="radio"
+									name="ownerPriority"
+									id="ownerFirst"
+									value="first"
+									th:checked="${ownerPriority == 'first'}"
+									form="characterSearchForm"
+									onchange="this.form.submit()">
+								<label class="form-check-label" for="ownerFirst">
+									Show mine first
+								</label>
+							</div>
+
+							<div class="form-check form-check-inline">
+								<input class="form-check-input"
+									type="radio"
+									name="ownerPriority"
+									id="ownerLast"
+									value="last"
+									th:checked="${ownerPriority == 'last'}"
+									form="characterSearchForm"
+									onchange="this.form.submit()">
+								<label class="form-check-label" for="ownerLast">
+									Show mine last
+								</label>
+							</div>
+
+							<div class="form-check form-check-inline">
+								<input class="form-check-input"
+									type="radio"
+									name="ownerPriority"
+									id="ownerIgnore"
+									value="ignore"
+									th:checked="${ownerPriority == 'ignore' or ownerPriority == null}"
+									form="characterSearchForm"
+									onchange="this.form.submit()">
+								<label class="form-check-label" for="ownerIgnore">
+									Mix all visible
+								</label>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- CHARACTER RESULTS FEEDBACK -->
+	<div th:if="${#lists.isEmpty(characters)}" class="alert alert-light border text-center mb-4">
+		No characters matched your search.
+	</div>
+
+	<!-- CHARACTER GRID -->
 	<div class="row g-3">
 
 		<div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-custom" th:each="character : ${characters}">
 			
-		<div class="card card-modern shadow-sm h-100">
+		<div class="card card-modern shadow-sm h-100"
+     		 th:classappend="${session.user != null and character.user != null and session.user.userId == character.user.userId} ? ' owned-character'">
 
 			<div class="image-wrapper">
 
@@ -26,12 +160,21 @@
 					class="card-img-top character-card-img"
 					alt="Character Image">
 
-			<span class="type-badge"
-				th:classappend="
-					${character.characterType == 'Player'} ? ' badge-player' :
-					(${character.characterType == 'NPC'} ? ' badge-npc' : ' badge-monster')"
-				th:text="${character.characterType}">
-			</span>
+					<div class="badge-stack">
+
+						<span class="type-badge"
+							th:classappend="
+								${character.characterType == 'Player'} ? ' badge-player' :
+								(${character.characterType == 'NPC'} ? ' badge-npc' : ' badge-monster')"
+							th:text="${character.characterType}">
+						</span>
+
+						<span class="visibility-badge"
+							th:classappend="${character.visibility == 1} ? ' visibility-private' : ' visibility-public'"
+							th:text="${character.visibility == 1} ? 'Private' : 'Public'">
+						</span>
+
+					</div>
 
 			</div>
 

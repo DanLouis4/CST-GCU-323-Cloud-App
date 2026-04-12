@@ -1,6 +1,9 @@
 body {
      background-color: #f3f3f3;
      font-family: Arial, Helvetica, sans-serif;
+     overflow-y: scroll;
+
+     
  }
 
  .page-shell {
@@ -315,7 +318,8 @@ body {
     }
 }
 
-/* Character Card Styles */
+/* CHARACTER CARD STYLES */
+
 .image-wrapper {
     position: relative;
     overflow: hidden;
@@ -330,21 +334,53 @@ body {
 	object-position: center top;
 }
 
+/* Owned Character Highlight */
+.owned-character {
+    border: 1px solid rgb(255, 0, 0) !important;
+    box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.15);
+    transition: all 0.2s ease-in-out;
+}
+
+.owned-character:hover {
+    border-color: rgba(255, 174, 0, 0.85) !important;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.25);
+}
+
+/* Type Badge Styles */
 .type-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.badge-stack {
     position: absolute;
     top: 10px;
     right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    z-index: 2;
+}
 
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-
-    padding: 4px 8px;
+.visibility-badge {
+    font-size: 0.72rem;
+    padding: 0.32rem 0.55rem;
     border-radius: 6px;
-
     color: #fff;
+    line-height: 1;
+}
 
-    text-transform: uppercase;
+.visibility-public {
+    background-color: rgba(25, 135, 84, 0.85);
+}
+
+.visibility-private {
+    background-color: rgba(143, 0, 0, 0.9);
 }
 
 .badge-player {
@@ -397,4 +433,160 @@ body {
 
 .single-action-btn {
     border-radius: 8px;
+}
+
+/*  Additional styles for the character list page */
+/*
+    The .character-toolbar class is used to style the container that holds the search and sort controls on the character list page.
+    It uses flexbox to arrange its child elements (the search block and the sort block) in a responsive manner.
+    The gap property creates space between the child elements, and the justify-content: center; centers them horizontally within the toolbar.
+    The flex-wrap: wrap; allows the child elements to wrap to the next line on smaller screens, ensuring a mobile-friendly layout.
+*/
+.character-toolbar {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.character-search-block {
+    flex: 1 1 620px;
+    min-width: 320px;
+}
+
+.character-sort-block {
+    flex: 0 1 280px;
+    min-width: 260px;
+}
+
+@media (max-width: 767.98px) {
+    .character-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .character-search-block,
+    .character-sort-block {
+        min-width: 100%;
+    }
+}
+
+/* Styles for the owner priority selection box on the character list page */
+.owner-priority-box {
+    max-width: 980px;
+    margin: -0.25rem auto 1.5rem auto;
+    text-align: center;
+}
+
+.owner-priority-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+    color: #333;
+    letter-spacing: 0.3px;
+}
+
+.owner-priority-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding: 0.65rem 1rem;
+    background: #fff;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+}
+
+.owner-priority-options .form-check {
+    margin-bottom: 0;
+}
+
+.character-tools-accordion {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.character-tools-accordion .accordion-button {
+    font-weight: 700;
+}
+
+.character-tools-accordion .accordion-body {
+    background: #fff;
+}
+
+.character-toolbar {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.character-search-block {
+    flex: 1 1 620px;
+    min-width: 320px;
+}
+
+.character-sort-block {
+    flex: 0 1 280px;
+    min-width: 260px;
+}
+
+.owner-priority-box {
+    max-width: 980px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.owner-priority-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+    color: #333;
+    letter-spacing: 0.3px;
+}
+
+.owner-priority-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    padding: 0.65rem 1rem;
+    background: #fff;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+}
+
+.owner-priority-options .form-check {
+    margin-bottom: 0;
+}
+
+.owner-priority-options .form-check-label {
+    cursor: pointer;
+}
+
+@media (max-width: 767.98px) {
+    .character-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .character-search-block,
+    .character-sort-block {
+        min-width: 100%;
+    }
+
+    .owner-priority-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
 }

@@ -24,13 +24,24 @@ public class CharactersController
     @Autowired
     private ClassDatabaseService classService;
 
-
     @GetMapping("/characters")
-    public String characters(Model model, HttpSession session)
+    public String characters(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "ownerPriority", required = false) String ownerPriority,
+            Model model,
+            HttpSession session)
     {
         UserEntity user = (UserEntity) session.getAttribute("user");
-        model.addAttribute("characters", characterService.getVisibleCharacters(user));
+
+        model.addAttribute("characters",
+                characterService.searchAndSortVisibleCharacters(user, keyword, sortBy, ownerPriority));
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("ownerPriority", ownerPriority);
         model.addAttribute("session", session);
+
         return "characters";
     }
 
