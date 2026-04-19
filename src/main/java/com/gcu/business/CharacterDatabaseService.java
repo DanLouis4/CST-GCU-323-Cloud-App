@@ -6,19 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-// logging
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-// Spring framework
 import org.springframework.stereotype.Service;
 
-// Repositories
 import com.gcu.data.CharacterRepository;
 import com.gcu.data.ClassRepository;
 import com.gcu.data.RaceRepository;
-
-// Models
 import com.gcu.models.CharacterEntity;
 import com.gcu.models.ClassEntity;
 import com.gcu.models.RaceEntity;
@@ -124,6 +118,11 @@ public class CharacterDatabaseService {
                 resultCharacters = characterRepository.findAll().stream()
                         .filter(character -> {
                             return switch (field) {
+                                case "user" ->
+                                    character.getUser() != null
+                                            && character.getUser().getUsername() != null
+                                            && character.getUser().getUsername().equalsIgnoreCase(value);
+                                
                                 case "gender" ->
                                     character.getCharacterGender() != null
                                             && character.getCharacterGender().equalsIgnoreCase(value);

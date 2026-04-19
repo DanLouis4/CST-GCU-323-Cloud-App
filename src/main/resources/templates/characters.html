@@ -156,6 +156,13 @@
 
 			<div class="image-wrapper">
 
+				<div class="image-wrapper">
+
+				<!-- FAVORITE BUTTON -->
+				<button class="favorite-btn rounded-circle" disabled title="Add to Favorites (Coming Soon)">
+					<i class="bi bi-heart-fill"></i>
+				</button>
+
 				<img th:src="${character.imageUrl}"
 					class="card-img-top character-card-img"
 					alt="Character Image">
@@ -188,6 +195,23 @@
 					<span th:text="${character.race.raceName}"></span>
 					&middot;
 					<span th:text="${character.characterClass.className}"></span>
+				</p>
+
+				<!-- OWNER INFO -->
+				<p class="text-muted small mb-3">
+					<span th:if="${session.user != null and character.user != null and session.user.userId == character.user.userId}">
+						Owner: You
+					</span>
+
+					<span th:if="${session.user == null or character.user == null or session.user.userId != character.user.userId}">
+						<span class="owner-label">Owner:</span>
+						<a th:if="${character.user != null}"
+							class="owner-link"
+							th:href="@{/characters(keyword='user:' + ${character.user.username})}"
+							th:text="${character.user.username}">
+						</a>
+						<span th:if="${character.user == null}">Unknown</span>
+					</span>
 				</p>
 
 				<!-- OWNER ACTIONS -->

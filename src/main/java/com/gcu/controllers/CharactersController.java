@@ -1,23 +1,28 @@
 package com.gcu.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpSession;
-
-import com.gcu.business.CharacterDatabaseService;
-import com.gcu.models.CharacterEntity;
-import com.gcu.business.RaceDatabaseService;
-import com.gcu.business.ClassDatabaseService;
-import com.gcu.models.UserEntity;
-
-// logging
+// Importing necessary libraries for logging, Spring MVC annotations, and session management
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.gcu.business.CharacterDatabaseService;
+import com.gcu.business.ClassDatabaseService;
+import com.gcu.business.RaceDatabaseService;
+import com.gcu.models.CharacterEntity;
+import com.gcu.models.UserEntity;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CharactersController
 {
+    // Initialize the logger for this class
     private static final Logger logger = LoggerFactory.getLogger(CharactersController.class);
 
     private final CharacterDatabaseService characterService;

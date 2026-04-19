@@ -21,6 +21,9 @@ public class ClassEntity
     @Column(name = "class_name", nullable = false, unique = true)
     private String className;
 
+    @Column(name = "class_type")
+    private String classType;
+
     @Column(name = "class_description")
     private String classDescription;
 
@@ -52,6 +55,16 @@ public class ClassEntity
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public String getClassType()
+    {
+        return classType;
+    }
+
+    public void setClassType(String classType)
+    {
+        this.classType = classType;
     }
 
     public String getClassDescription()

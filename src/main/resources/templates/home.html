@@ -3,23 +3,37 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/defaultTemplate}">
 <head>
-    <title>RPG Character Tracker | Home</title>
+    <title>DenizenRPG | Home</title>
 </head>
 
 <body>
+<section layout:fragment="content" class="landing-page">
 
-<section layout:fragment="content" class="container mt-5 text-center">
+    <div class="container-fluid px-0">
+        <div class="row g-0 landing-row">
 
-    <h3>Welcome to the</h3>
-	<h1>RolePlaying Game Character Tracker</h1>
-    <p>Your source for creating and viewing characters for your tabletop adventures</p>
+            <div class="col-3 landing-panel"
+                 style="background-image: url('/images/home-img-1.jpg');"></div>
 
-    <a class="btn btn-primary mt-3"
-       th:href="@{/characters}">
-        View Characters
-    </a>
+            <div class="col-3 landing-panel"
+                 style="background-image: url('/images/home-img-2.png');"></div>
+
+            <div class="col-3 landing-panel"
+                 style="background-image: url('/images/home-img-3.png');"></div>
+
+            <div class="col-3 landing-panel"
+                 style="background-image: url('/images/home-img-5.jpg');"></div>
+        </div>
+    </div>
+
+    <div class="landing-overlay"></div>
+
+    <div class="landing-content text-center text-white">
+        <h1 class="landing-title trade-winds-regular">DenizenRPG</h1>
+        <p class="landing-subtitle">A character management system for players, NPCs, and monsters across your RPG campaigns.</p>
+        <a th:href="@{/characters}" class="btn btn-primary btn-lg px-4">View Characters</a>
+    </div>
 
 </section>
-
 </body>
 </html>

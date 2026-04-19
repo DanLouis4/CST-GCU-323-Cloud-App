@@ -1,3 +1,9 @@
+.trade-winds-regular {
+  font-family: "Trade Winds", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
      background-color: #f3f3f3;
      font-family: Arial, Helvetica, sans-serif;
@@ -5,7 +11,126 @@ body {
 
      
  }
+/* Landing Page Styles */
+.landing-page {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    margin-top: -1.5rem;
+}
 
+.landing-row {
+    min-height: 100vh;
+}
+
+.landing-panel {
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.45;
+    filter: brightness(0.9) contrast(1.05);
+}
+
+.landing-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.50);
+    z-index: 2;
+}
+
+.landing-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -54%);
+    z-index: 3;
+    width: 100%;
+    max-width: 900px;
+    padding: 0 1rem;
+}
+
+/* Creates consistent spacing between title, subtitle, and button */
+.landing-content > * + * {
+    margin-top: 1.5rem;
+}
+
+.landing-title {
+    font-family: 'Trade Winds', cursive;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    line-height: 1.05;
+    margin-bottom: 0;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.landing-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    opacity: 0.88;
+    margin-bottom: 0;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.landing-content .btn {
+    background: rgba(0, 52, 194, 0.67);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    font-size: 1rem;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin-top: 2rem;
+    transition: all 0.25s ease;
+}
+
+.landing-content .btn:hover {
+    background: rgba(3, 182, 53, 0.50);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 768px) {
+    .landing-panel {
+        min-height: 25vh;
+    }
+
+    .landing-row {
+        min-height: 100vh;
+        flex-wrap: wrap;
+    }
+
+    .landing-panel.col-3 {
+        width: 50%;
+        flex: 0 0 50%;
+    }
+
+    .landing-content {
+        transform: translate(-50%, -52%);
+        padding: 0 1.25rem;
+    }
+
+    .landing-content > * + * {
+        margin-top: 1.25rem;
+    }
+
+    .landing-subtitle {
+        letter-spacing: 0.03em;
+        font-size: 0.95rem;
+    }
+
+    .landing-content .btn {
+        margin-top: 1.5rem;
+        padding: 0.7rem 1.75rem;
+    }
+}
+
+/* Create/Edit Character Page Styles */
  .page-shell {
      max-width: 1000px;
      margin: 40px auto;
@@ -395,6 +520,31 @@ body {
     background-color: rgba(220, 53, 69, 0.7); /* red */
 }
 
+/* Favorite Button (Top-Left) */
+.favorite-btn {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 5;
+
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+
+    color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.favorite-btn i {
+    font-size: 0.9rem;
+}
+
+/* Optional hover (future-ready) */
+.favorite-btn:not(:disabled):hover {
+    color: #ff4d6d;
+}
+
+
 .card-modern {
     border: 1px solid rgba(192, 192, 192, 1.0);
     border-radius: 12px;
@@ -413,6 +563,24 @@ body {
 
 .card-body {
     padding: 1rem;
+}
+
+.owner-label {
+    font-size: 12px;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.owner-link {
+    text-decoration: none;
+    font-size: small;
+    color: inherit;
+}
+
+.owner-link:hover {
+    color:steelblue;
+    text-decoration: none;
+    font-style: italic;
 }
 
 .character-actions .btn {
