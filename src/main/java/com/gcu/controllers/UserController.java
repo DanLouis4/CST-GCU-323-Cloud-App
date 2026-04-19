@@ -12,9 +12,15 @@ import jakarta.servlet.http.HttpSession;
 
 import com.gcu.business.UserDatabaseService;
 
+// logging
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class UserController
 {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private final UserDatabaseService userDatabaseService;
 
     public UserController(UserDatabaseService userDatabaseService)
@@ -25,12 +31,16 @@ public class UserController
     @GetMapping("/signin")
     public String showSignInPage()
     {
+        logger.info("Entering showSignInPage()");
+        logger.info("Exiting showSignInPage() -> signin");
         return "signin";
     }
 
     @GetMapping("/signup")
     public String showSignUpPage()
     {
+        logger.info("Entering showSignUpPage()");
+        logger.info("Exiting showSignUpPage() -> signup");
         return "signup";
     }
 
@@ -40,43 +50,53 @@ public class UserController
                                 Model model,
                                 HttpSession session)
     {
+        logger.info("Entering processSignIn() for username={}", username);
+
         UserEntity user = userDatabaseService.validateUser(username, password);
 
         if (user == null)
         {
+            logger.warn("Failed sign-in attempt for username={}", username);
             model.addAttribute("error", "Invalid username or password");
+            logger.info("Exiting processSignIn() -> signin");
             return "signin";
         }
 
         session.setAttribute("user", user);
+        logger.info("Successful sign-in for username={}", username);
+        logger.info("Exiting processSignIn() -> redirect:/characters");
 
         return "redirect:/characters";
-    } 
-    
+    }
+
     @GetMapping("/signout")
     public String signOut(HttpSession session)
     {
+        logger.info("Entering signOut()");
         session.invalidate();
+        logger.info("Exiting signOut() -> redirect:/");
         return "redirect:/";
     }
 
     @PostMapping("/signup")
     public String processSignUp(@ModelAttribute UserEntity user, Model model)
-{
-    // Check if username already exists
-    if (userDatabaseService.usernameExists(user.getUsername()))
     {
-        model.addAttribute("error", "Username already exists");
-        return "signup";
+        logger.info("Entering processSignUp() for username={}", user.getUsername());
+
+        if (userDatabaseService.usernameExists(user.getUsername()))
+        {
+            logger.warn("Signup rejected: username already exists -> {}", user.getUsername());
+            model.addAttribute("error", "Username already exists");
+            logger.info("Exiting processSignUp() -> signup");
+            return "signup";
+        }
+
+        user.setRole("USER");
+        userDatabaseService.addUser(user);
+
+        logger.info("User created successfully for username={}", user.getUsername());
+        logger.info("Exiting processSignUp() -> redirect:/signin");
+
+        return "redirect:/signin";
     }
-
-    // Set default role
-    user.setRole("USER");
-
-    // Save user
-    userDatabaseService.addUser(user);
-
-    // Redirect to sign in page
-    return "redirect:/signin";
-}
 }
