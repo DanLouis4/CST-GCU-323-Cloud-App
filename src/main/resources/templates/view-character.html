@@ -108,6 +108,36 @@
                     <i class="bi bi-trash"></i> DELETE
                 </a>
             </div>
+            
+        <hr class="view-divider">
+
+            <div class="view-actions mt-3"
+                th:if="${session.user != null 
+                        and session.user.role == 'ADMIN'}">
+
+                <form th:if="${!character.flagged}"
+                    th:action="@{/characters/flag/{id}(id=${character.characterId})}"
+                    method="post">
+
+                    <button type="submit"
+                            class="btn btn-warning view-action-btn"
+                            onclick="return confirm('Flag this character? It will no longer appear publicly.');">
+                        <i class="bi bi-flag"></i> FLAG CHARACTER
+                    </button>
+                </form>
+
+                <form th:if="${character.flagged}"
+                    th:action="@{/characters/unflag/{id}(id=${character.characterId})}"
+                    method="post">
+
+                    <button type="submit"
+                            class="btn btn-dark view-action-btn"
+                            onclick="return confirm('Remove flag from this character?');">
+                        <i class="bi bi-flag-fill"></i> REMOVE FLAG
+                    </button>
+                </form>
+
+            </div>
 
         </div>
     </div>

@@ -132,7 +132,9 @@
 
                 <div class="actions">
                     <button type="submit" class="btn btn-primary btn-action">SAVE</button>
-                    <a th:href="@{/characters}" class="btn btn-danger btn-action">CANCEL</a>
+                    <a th:href="@{/characters/view/{id}(id=${character.characterId})}"
+                       class="btn btn-danger btn-action">CANCEL
+                    </a>
                 </div>
             </form>
         </div>
