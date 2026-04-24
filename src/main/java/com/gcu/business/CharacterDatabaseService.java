@@ -500,4 +500,30 @@ public class CharacterDatabaseService {
             throw e;
         }
     }
+
+    public void flagCharacter(int id)
+    {
+        CharacterEntity character = findById(id);
+
+        if (character != null && !Boolean.TRUE.equals(character.getFlagged()))
+        {
+            character.setFlagged(true);
+            character.setUpdatedAt(LocalDateTime.now());
+
+            characterRepository.save(character);
+        }
+    }
+
+    public void unflagCharacter(int id)
+    {
+        CharacterEntity character = findById(id);
+
+        if (character != null && Boolean.TRUE.equals(character.getFlagged()))
+        {
+            character.setFlagged(false);
+            character.setUpdatedAt(LocalDateTime.now());
+
+            characterRepository.save(character);
+        }
+    }
 }

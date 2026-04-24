@@ -196,4 +196,44 @@ public class CharactersController
         logger.info("Exiting deleteCharacter() -> redirect:/characters");
         return "redirect:/characters";
     }
+
+    @PostMapping("/characters/flag/{id}")
+    public String flagCharacter(@PathVariable int id, HttpSession session)
+    {
+        if (!isAdmin(session))
+        {
+            return "redirect:/characters";
+        }
+
+        characterService.flagCharacter(id);
+
+        return "redirect:/characters";
+    }
+
+    @PostMapping("/characters/unflag/{id}")
+    public String unflagCharacter(@PathVariable int id, HttpSession session)
+    {
+        if (!isAdmin(session))
+        {
+            return "redirect:/characters";
+        }
+
+        characterService.unflagCharacter(id);
+
+        return "redirect:/characters";
+    }
+
+    /* HELPER METHODS */
+    
+    /**
+     * Checks if the current user is an admin
+     */
+    private boolean isAdmin(HttpSession session)
+    {
+        UserEntity user = (UserEntity) session.getAttribute("user");
+
+        return user != null
+                && user.getRole() != null
+                && user.getRole().equalsIgnoreCase("ADMIN");
+    }
 }
