@@ -565,8 +565,12 @@ body {
 }
 
 .visibility-flagged {
-    background-color: #dc3545;
-    color: #fff;
+    background-color: #000;
+    color: #ff4d4f; /* slightly brighter red */
+    font-weight: 700;
+    border: 1px solid #ff4d4f;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 
