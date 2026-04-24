@@ -564,12 +564,6 @@ body {
     border-radius: inherit;
 }
 
-.flagged-character .card-body,
-.flagged-character .image-wrapper {
-    position: relative;
-    z-index: 6;
-}
-
 .visibility-flagged {
     background-color: #dc3545;
     color: #fff;
