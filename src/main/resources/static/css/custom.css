@@ -573,6 +573,11 @@ body {
     letter-spacing: 0.5px;
 }
 
+.flagged-character .character-actions {
+    position: relative;
+    z-index: 20;
+}
+
 
 .card-modern {
     border: 1px solid rgba(192, 192, 192, 1.0);
