@@ -152,11 +152,12 @@
 		<div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-custom" th:each="character : ${characters}">
 			
 		<div class="card card-modern shadow-sm h-100"
-     		 th:classappend="${session.user != null and character.user != null and session.user.userId == character.user.userId} ? ' owned-character'">
+		     th:classappend="
+			 ${character.flagged} ? ' flagged-character' :
+			 (${session.user != null and character.user != null and session.user.userId == character.user.userId} ? ' owned-character' : '')">
 
+			 <!-- Image Wrapper -->
 			<div class="image-wrapper">
-
-				<div class="image-wrapper">
 
 				<!-- FAVORITE BUTTON -->
 				<button class="favorite-btn rounded-circle" disabled title="Add to Favorites (Coming Soon)">
@@ -181,10 +182,16 @@
 							th:text="${character.visibility == 1} ? 'Private' : 'Public'">
 						</span>
 
+						<span class="flagged-badge"
+							th:if="${character.flagged}">
+							Flagged
+						</span>
+
 					</div>
 
 			</div>
 
+			<!-- CARD BODY -->
 			<div class="card-body d-flex flex-column">
 
 				<h5 class="card-title mb-1"

@@ -544,6 +544,31 @@ body {
     color: #ff4d6d;
 }
 
+.flagged-character {
+    position: relative;
+    overflow: hidden;
+}
+
+.flagged-character::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 0, 0, 0.20);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.flagged-character .card-body,
+.flagged-character .image-wrapper {
+    position: relative;
+    z-index: 6;
+}
+
+.visibility-flagged {
+    background-color: #dc3545;
+    color: #fff;
+}
+
 
 .card-modern {
     border: 1px solid rgba(192, 192, 192, 1.0);
