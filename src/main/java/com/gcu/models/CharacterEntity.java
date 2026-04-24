@@ -41,6 +41,9 @@ public class CharacterEntity
     @Column(name = "visibility", nullable = false)
     private Integer visibility;
 
+    @Column(name = "flagged", nullable = false)
+    private Boolean flagged = false;
+
     @Column(name = "created_on")
     private LocalDateTime createdOn;
 
@@ -83,6 +86,11 @@ public class CharacterEntity
     public void setVisibility(Integer visibility)
     {
         this.visibility = visibility;
+    }
+
+    public boolean isFlagged()
+    {
+        return Boolean.TRUE.equals(flagged);
     }
 
     public String getCharacterName()
