@@ -546,16 +546,22 @@ body {
 
 .flagged-character {
     position: relative;
-    overflow: hidden;
 }
 
 .flagged-character::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background: rgba(145, 2, 2, 0.545);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(255, 0, 0, 0.20);
+
+    z-index: 10;
     pointer-events: none;
-    z-index: 5;
+
+    border-radius: inherit;
 }
 
 .flagged-character .card-body,
