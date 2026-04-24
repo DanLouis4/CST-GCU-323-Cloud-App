@@ -83,6 +83,17 @@
                         <div class="row mb-4">
                             <div class="col-12">
                                 <label class="form-label-sm d-block">Visibility</label>
+                                
+                                <!-- If character is flagged, include a hidden input to preserve visibility value -->
+                                <input type="hidden"
+                                    th:if="${character.flagged}"
+                                    name="visibility"
+                                    th:value="${character.visibility}">
+
+                                <div class="flagged-visibility-warning"
+                                    th:if="${character.flagged}">
+                                    CHARACTER IS FLAGGED
+                                </div>
 
                                 <div class="row">
                                     <div class="col-6">
@@ -91,7 +102,8 @@
                                                 name="visibility"
                                                 id="visibilityPublic"
                                                 value="0"
-                                                th:checked="${character.visibility == 0}">
+                                                th:checked="${character.visibility == 0}"
+                                                th:disabled="${character.flagged}">
                                             <label class="form-check-label" for="visibilityPublic">
                                                 Public
                                             </label>
@@ -104,7 +116,8 @@
                                                 name="visibility"
                                                 id="visibilityPrivate"
                                                 value="1"
-                                                th:checked="${character.visibility == 1}">
+                                                th:checked="${character.visibility == 1}"
+                                                th:disabled="${character.flagged}">
                                             <label class="form-check-label" for="visibilityPrivate">
                                                 Private
                                             </label>
