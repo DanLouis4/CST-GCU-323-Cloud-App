@@ -553,7 +553,7 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(255, 0, 0, 0.20);
+    background: rgba(145, 2, 2, 0.545);
     pointer-events: none;
     z-index: 5;
 }
