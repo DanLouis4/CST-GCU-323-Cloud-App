@@ -167,11 +167,11 @@ public class CharacterDatabaseService {
 
             if (user == null) {
                 visibleResults = resultCharacters.stream()
-                        .filter(character -> character.getVisibility() == 0)
+                        .filter(character -> character.getVisibility() == 0 && !Boolean.TRUE.equals(character.getFlagged()))
                         .toList();
             } else {
                 visibleResults = resultCharacters.stream()
-                        .filter(character -> character.getVisibility() == 0
+                        .filter(character -> (character.getVisibility() == 0 && !Boolean.TRUE.equals(character.getFlagged()))
                                 || (character.getUser() != null
                                         && character.getUser().getUserId().equals(user.getUserId())))
                         .toList();
