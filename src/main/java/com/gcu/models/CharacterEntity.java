@@ -88,9 +88,14 @@ public class CharacterEntity
         this.visibility = visibility;
     }
 
-    public boolean isFlagged()
+    public Boolean getFlagged()
     {
-        return Boolean.TRUE.equals(flagged);
+        return flagged;
+    }
+
+    public void setFlagged(Boolean flagged)
+    {
+        this.flagged = flagged;
     }
 
     public String getCharacterName()
