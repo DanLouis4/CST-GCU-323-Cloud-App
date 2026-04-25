@@ -58,12 +58,17 @@ public class CharacterDatabaseService {
             List<CharacterEntity> allCharacters = characterRepository.findAll();
 
             List<CharacterEntity> visibleCharacters;
+            if (isAdmin(user)) {
+                logger.info("Admin user detected. Returning all characters.");
 
-            if (user == null) {
-                logger.info("Filtering public characters only for guest user");
+                visibleCharacters = allCharacters;
+
+            } else if (user == null) {
+                logger.info("Filtering public, unflagged characters only for guest user");
 
                 visibleCharacters = allCharacters.stream()
-                        .filter(character -> character.getVisibility() == 0 && !Boolean.TRUE.equals(character.getFlagged()))
+                        .filter(character -> character.getVisibility() == 0 
+                                && !Boolean.TRUE.equals(character.getFlagged()))
                         .toList();
             } else {
                 logger.info(
@@ -94,6 +99,7 @@ public class CharacterDatabaseService {
                 user != null ? user.getUsername() : "guest",
                 keyword);
 
+        /* Searches for characters based on a keyword and user visibility */
         try {
             if (keyword == null || keyword.trim().isEmpty()) {
                 logger.info("No keyword provided, delegating to getVisibleCharacters()");
@@ -108,6 +114,7 @@ public class CharacterDatabaseService {
 
             List<CharacterEntity> resultCharacters;
 
+            // Check for field-specific search syntax (e.g., "user:John", "gender:Male")
             if (searchText.contains(":")) {
                 String[] parts = searchText.split(":", 2);
                 String field = parts[0].trim();
@@ -115,6 +122,7 @@ public class CharacterDatabaseService {
 
                 logger.info("Field-specific search detected: {}={}", field, value);
 
+                // Perform field-specific filtering
                 resultCharacters = characterRepository.findAll().stream()
                         .filter(character -> {
                             return switch (field) {
@@ -165,13 +173,20 @@ public class CharacterDatabaseService {
 
             List<CharacterEntity> visibleResults;
 
-            if (user == null) {
+            if (isAdmin(user)) {
+                visibleResults = resultCharacters;
+            }
+            else if (user == null) {
                 visibleResults = resultCharacters.stream()
-                        .filter(character -> character.getVisibility() == 0 && !Boolean.TRUE.equals(character.getFlagged()))
+                        .filter(character -> character.getVisibility() == 0 
+                                && !Boolean.TRUE.equals(character.getFlagged()))
                         .toList();
-            } else {
+            }
+            else {
                 visibleResults = resultCharacters.stream()
-                        .filter(character -> (character.getVisibility() == 0 && !Boolean.TRUE.equals(character.getFlagged()))
+                        .filter(character ->
+                                (character.getVisibility() == 0 
+                                        && !Boolean.TRUE.equals(character.getFlagged()))
                                 || (character.getUser() != null
                                         && character.getUser().getUserId().equals(user.getUserId())))
                         .toList();
@@ -373,9 +388,7 @@ public class CharacterDatabaseService {
         }
     }
 
-    /*
-     * Finds a character by its ID
-     */
+    /* Finds a character by its ID */
     public CharacterEntity findById(int id) {
         logger.info("Entering findById() with id={}", id);
 
@@ -501,6 +514,7 @@ public class CharacterDatabaseService {
         }
     }
 
+    /* Flags a character in the database */
     public void flagCharacter(int id)
     {
         CharacterEntity character = findById(id);
@@ -514,6 +528,7 @@ public class CharacterDatabaseService {
         }
     }
 
+    /* Unflags a character in the database */
     public void unflagCharacter(int id)
     {
         CharacterEntity character = findById(id);
@@ -525,5 +540,15 @@ public class CharacterDatabaseService {
 
             characterRepository.save(character);
         }
+    }
+
+    /* HELPER METHODS */
+    
+    /* Checks if the given user has an admin role */
+    private boolean isAdmin(UserEntity user)
+    {
+        return user != null
+                && user.getRole() != null
+                && user.getRole().equalsIgnoreCase("ADMIN");
     }
 }
