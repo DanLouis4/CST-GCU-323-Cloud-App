@@ -19,16 +19,26 @@ import com.gcu.models.UserEntity;
 
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Controller for handling character-related operations such as listing, viewing, creating, editing, and deleting characters.
+ * Also includes functionality for flagging/unflagging characters (admin only).
+ */
 @Controller
 public class CharactersController
 {
-    // Initialize the logger for this class
+    
     private static final Logger logger = LoggerFactory.getLogger(CharactersController.class);
 
     private final CharacterDatabaseService characterService;
     private final RaceDatabaseService raceService;
     private final ClassDatabaseService classService;
     
+    /**
+     * Constructor for CharactersController, using dependency injection to receive service instances.
+     * @param characterService the service for managing character-related database operations
+     * @param raceService the service for managing race-related database operations
+     * @param classService the service for managing class-related database operations
+     */
     public CharactersController(CharacterDatabaseService characterService,
                                 RaceDatabaseService raceService,
                                 ClassDatabaseService classService)
@@ -38,7 +48,15 @@ public class CharactersController
         this.classService = classService;
     }
 
-
+    /**
+     * Handles GET requests to "/characters" endpoint, allowing users to view a list of characters with optional search and sorting parameters.
+     * @param keyword the search keyword for filtering characters by name (optional)
+     * @param sortBy the sorting criteria for ordering characters (optional)
+     * @param ownerPriority the owner priority filter for sorting characters (optional)
+     * @param model the Model object to pass data to the
+     * @param session the HttpSession object to check for user authentication and role
+     * @return the name of the view to render (characters.html)
+     */
     @GetMapping("/characters")
     public String characters(
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -63,6 +81,13 @@ public class CharactersController
         return "characters";
     }
 
+    /**
+     * Handles GET requests to "/characters/view/{id}" endpoint, allowing users to view details of a specific character by its ID.  
+     * @param id the ID of the character to view
+     * @param model the Model object to pass data to the
+     * @param session the HttpSession object to check for user authentication and role
+     * @return the name of the view to render (view-character.html) or a redirect to the characters list if the character is not found.
+     */
     @GetMapping("/characters/view/{id}")
     public String viewCharacter(@PathVariable int id, Model model, HttpSession session)
     {
@@ -82,6 +107,12 @@ public class CharactersController
         return "view-character";
     }
 
+    /**
+     * Handles GET requests to "/characters/create" endpoint, allowing users to access the form for creating a new character.
+     * @param model the Model object to pass data to the view
+     * @param session the HttpSession object to check for user authentication
+     * @return the name of the view to render (create-character.html) or a redirect to the sign-in page if the user is not authenticated.
+     */
     @GetMapping("/characters/create")
     public String showCreateForm(Model model, HttpSession session)
     {
@@ -105,6 +136,13 @@ public class CharactersController
         return "create-character";
     }
 
+    /**
+     * Handles POST requests to "/characters/create" endpoint, allowing users to submit the form for creating a new character.
+     * Validates the user's session and then adds the character to the database.
+     * @param character the CharacterEntity object populated from the form submission
+     * @param session the HttpSession object to check for user authentication
+     * @return a redirect to the characters list page after successful creation or a redirect to the sign-in page if the user is not authenticated.
+     */
     @PostMapping("/characters/create")
     public String createCharacter(@ModelAttribute("character") CharacterEntity character, HttpSession session)
     {
@@ -126,6 +164,14 @@ public class CharactersController
         return "redirect:/characters";
     }
     
+    /**
+     * Handles GET requests to "/characters/edit/{id}" endpoint, allowing users to access the form for editing an existing character.
+     * Validates the user's session and ownership of the character before allowing access to the edit form.
+     * @param id the ID of the character to edit
+     * @param model the Model object to pass data to the
+     * @param session the HttpSession object to check for user authentication and ownership of the character
+     * @return the name of the view to render (edit-character.html) or a redirect to the characters list if the character is not found or the user is not authorized to edit it.
+     */
     @GetMapping("/characters/edit/{id}")
     public String showEditForm(@PathVariable int id, Model model, HttpSession session)
     {
@@ -151,6 +197,13 @@ public class CharactersController
         return "edit-character";
     }
 
+    /**
+     * Handles POST requests to "/characters/edit" endpoint, allowing users to submit the form for editing an existing character.
+     * Validates the user's session and ownership of the character before allowing the update to be saved to the database.
+     * @param character the CharacterEntity object populated from the form submission, including the character ID to identify which character to update
+     * @param session the HttpSession object to check for user authentication and ownership of the character
+     * @return a redirect to the characters list page after successful update or a redirect to the sign-in page if the user is not authenticated.
+     */
     @PostMapping("/characters/edit")
     public String updateCharacter(@ModelAttribute("character") CharacterEntity character, HttpSession session)
     {
@@ -173,6 +226,13 @@ public class CharactersController
         return "redirect:/characters";
     }
 
+    /**
+     * Handles GET requests to "/characters/delete/{id}" endpoint, allowing users to delete an existing character by its ID.
+     * Validates the user's session and ownership of the character before allowing the deletion from the database
+     * @param id the ID of the character to delete
+     * @param session the HttpSession object to check for user authentication and ownership of the character
+     * @return a redirect to the characters list page after successful deletion or a redirect to the characters list if the character is not found or the user is not authorized to delete it.
+     */
     @GetMapping("/characters/delete/{id}")
     public String deleteCharacter(@PathVariable int id, HttpSession session)
     {
@@ -197,6 +257,13 @@ public class CharactersController
         return "redirect:/characters";
     }
 
+    /**
+     * Handles POST requests to "/characters/flag/{id}" endpoint, allowing admin users to flag a character by its ID.
+     * Validates the user's session and admin role before allowing the character to be flagged in the database.
+     * @param id the ID of the character to flag
+     * @param session the HttpSession object to check for user authentication and admin role 
+     * @return a redirect to the characters list page after successful flagging or a redirect to the characters list if the user is not an admin.
+     */
     @PostMapping("/characters/flag/{id}")
     public String flagCharacter(@PathVariable int id, HttpSession session)
     {
@@ -210,6 +277,13 @@ public class CharactersController
         return "redirect:/characters";
     }
 
+    /**
+     * Handles POST requests to "/characters/unflag/{id}" endpoint, allowing admin users to unflag a character by its ID.
+     * Validates the user's session and admin role before allowing the character to be unflagged in the database.
+     * @param id the ID of the character to unflag
+     * @param session the HttpSession object to check for user authentication and admin role
+     * @return a redirect to the characters list page after successful unflagging or a redirect to the characters list if the user is not an admin.
+     */
     @PostMapping("/characters/unflag/{id}")
     public String unflagCharacter(@PathVariable int id, HttpSession session)
     {
@@ -226,7 +300,9 @@ public class CharactersController
     /* HELPER METHODS */
     
     /**
-     * Checks if the current user is an admin
+     * Helper method to check if the current user has an admin role based on the session information.
+     * @param session the HttpSession object to check for user authentication and role
+     * @return true if the user is an admin, false otherwise.
      */
     private boolean isAdmin(HttpSession session)
     {

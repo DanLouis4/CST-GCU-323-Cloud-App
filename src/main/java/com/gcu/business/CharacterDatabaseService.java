@@ -18,16 +18,28 @@ import com.gcu.models.ClassEntity;
 import com.gcu.models.RaceEntity;
 import com.gcu.models.UserEntity;
 
+/**
+ * CharacterDatabaseService is a Spring service class that provides business logic for managing character entities in the application.
+ * It interacts with the CharacterRepository, RaceRepository, and ClassRepository to perform CRUD operations, search, and filtering of characters based on user roles and visibility rules.
+ * The service includes methods for retrieving all characters, retrieving visible characters for a
+ * specific user, searching characters with keyword and sorting options, adding new characters,
+ * updating existing characters, deleting characters, and flagging/unflagging characters for review.
+ */
 @Service
-public class CharacterDatabaseService {
+public class CharacterDatabaseService
+{
+
     private static final Logger logger = LoggerFactory.getLogger(CharacterDatabaseService.class);
 
     private final CharacterRepository characterRepository;
     private final RaceRepository raceRepository;
     private final ClassRepository classRepository;
 
-    /*
-     * Constructor for dependency injection
+    /**
+     * Constructor for CharacterDatabaseService, which initializes the repositories used for character management.
+     * @param characterRepository the repository for performing CRUD operations on CharacterEntity objects
+     * @param raceRepository the repository for retrieving RaceEntity objects when adding or updating characters
+     * @param classRepository the repository for retrieving ClassEntity objects when adding or updating characters
      */
     public CharacterDatabaseService(CharacterRepository characterRepository, RaceRepository raceRepository, ClassRepository classRepository) {
         this.characterRepository = characterRepository;
@@ -35,7 +47,10 @@ public class CharacterDatabaseService {
         this.classRepository = classRepository;
     }
 
-    /* Retrieves all characters from the database */
+    /**
+     * Retrieves all characters from the database without applying any visibility or flagging filters. This method is intended for internal use and administrative purposes.
+     * @return list of all CharacterEntity objects in the database
+     */
     public List<CharacterEntity> getAllCharacters() {
         logger.info("Entering getAllCharacters()");
 
@@ -50,7 +65,12 @@ public class CharacterDatabaseService {
         }
     }
 
-    /* Retrieves characters visible to a specific user */
+    /**
+     * Retrieves characters from the database based on the visibility and flagging rules for the given user. Admin users see all characters,
+     * registered users see their own characters plus public unflagged ones, and guests see only public unflagged characters.
+     * @param user the currently authenticated (null if guest)
+     * @return list of CharacterEntity objects visible to the given user based on their role and the characters' visibility and flagging status
+     */
     public List<CharacterEntity> getVisibleCharacters(UserEntity user) {
         logger.info("Entering getVisibleCharacters() for user={}", user != null ? user.getUsername() : "null");
 
@@ -91,7 +111,25 @@ public class CharacterDatabaseService {
         }
     }
 
-    /* Searches for characters based on a keyword and user visibility */
+    /**
+     * Searches for characters based on a keyword and user visibility.
+     * 
+     * Supports:
+     * - General keyword search across multiple fields (name, race, class, description, type, username)
+     * - Field-specific search using "field:value" syntax (e.g., "user:john", "gender:male")
+     * 
+     * Field-specific searches use exact matching for controlled fields (e.g., gender, user),
+     * while general searches use partial matching.
+     * 
+     * Results are filtered based on user role:
+     * - Admin: sees all characters
+     * - Registered user: sees own characters + public unflagged characters
+     * - Guest: sees only public unflagged characters
+     *
+     * @param user the currently authenticated user (null if guest)
+     * @param keyword the search term or field-specific query
+     * @return list of visible CharacterEntity objects matching the search criteria
+     */
     public List<CharacterEntity> searchVisibleCharacters(UserEntity user, String keyword) {
 
         logger.info(
@@ -200,7 +238,14 @@ public class CharacterDatabaseService {
         }
     }
 
-    /* Sorts a list of characters based on a specified field and order */
+    /**
+     * Searches for characters based on a keyword and user visibility, then sorts the results based on the specified criteria (e.g., newest, oldest, name ascending/descending, level ascending
+     * @param user the currently authenticated user (null if guest)
+     * @param keyword the search term entered by the user
+     * @param sortBy the sorting criteria (e.g., nameAsc, levelDesc)
+     * @param ownerPriority determines whether user-owned characters appear first or last
+     * @return list of CharacterEntity objects that match the search criteria, are visible to the given user based on their role and the characters' visibility and flagging status,and are sorted according to the specified criteria and owner priority
+     */
     public List<CharacterEntity> searchAndSortVisibleCharacters(
             UserEntity user, String keyword, String sortBy, String ownerPriority) {
         logger.info(
@@ -388,7 +433,11 @@ public class CharacterDatabaseService {
         }
     }
 
-    /* Finds a character by its ID */
+    /**
+     * Finds a character by its ID without applying any visibility or flagging filters. This method is intended for internal use and administrative purposes.
+     * @param id the ID of the character to find
+     * @return CharacterEntity object with the specified ID, or null if not found
+     */
     public CharacterEntity findById(int id) {
         logger.info("Entering findById() with id={}", id);
 
@@ -410,8 +459,10 @@ public class CharacterDatabaseService {
         }
     }
 
-    /*
-     * Adds a new character to the database
+    /**
+     * Adds a new character to the database, associating it with the specified user and
+     * @param character the CharacterEntity object to be added to the database, which should contain all necessary
+     * @param user the currently authenticated user (null if guest)
      */
     public void addCharacter(CharacterEntity character, UserEntity user) {
         logger.info(
@@ -452,8 +503,11 @@ public class CharacterDatabaseService {
         }
     }
 
-    /*
-     * Updates an existing character in the database
+    /**
+     * Updates an existing character in the database, allowing changes to all fields including visibility and flagging status.
+     * The method first retrieves the existing character by ID, then updates its fields with the new values provided in the input character object,
+     * and finally saves the updated character back to the database.
+     * @param character the CharacterEntity object containing the updated character information, which must include the characterId of the character to be updated.
      */
     public void updateCharacter(CharacterEntity character) {
         logger.info("Entering updateCharacter() for id={}", character.getCharacterId());
@@ -497,8 +551,10 @@ public class CharacterDatabaseService {
         }
     }
 
-    /*
-     * Deletes a character from the database
+    /**
+     * Deletes a character from the database by its ID. The method first checks if a character with the specified ID exists, and if it does, it deletes the character.
+     * If no character is found with the given ID, it logs a warning and does not perform any deletion.
+     * @param id the ID of the character to be deleted from the database
      */
     public void deleteCharacter(int id) {
         logger.info("Entering deleteCharacter() with id={}", id);
@@ -514,7 +570,13 @@ public class CharacterDatabaseService {
         }
     }
 
-    /* Flags a character in the database */
+    /**
+     * Flags a character by its ID, marking it as inappropriate or needing review.
+     * The method first retrieves the character by ID, checks if it exists and is not already flagged,
+     * then sets the flagged status to true and updates the updatedAt timestamp before saving the changes to the database.
+     * If the character does not exist or is already flagged, it logs a warning and does not perform any update.
+     * @param id the ID of the character to be flagged in the database
+     */
     public void flagCharacter(int id)
     {
         CharacterEntity character = findById(id);
@@ -528,7 +590,12 @@ public class CharacterDatabaseService {
         }
     }
 
-    /* Unflags a character in the database */
+    /**
+     * Unflags a character by its ID, removing the flagged status. The method first retrieves the character by ID,
+     * checks if it exists and is currently flagged, then sets the flagged status to false and updates the updatedAt timestamp before saving the changes to the database.
+     * If the character does not exist or is not currently flagged, it logs a warning and does not perform any update.
+     * @param id the ID of the character to be unflagged in the database
+     */
     public void unflagCharacter(int id)
     {
         CharacterEntity character = findById(id);
@@ -544,7 +611,12 @@ public class CharacterDatabaseService {
 
     /* HELPER METHODS */
     
-    /* Checks if the given user has an admin role */
+    /**
+     * Checks if the given user has an admin role. A user is considered an admin if their role is not null and equals "ADMIN" (case-insensitive).
+     * This method is used to determine if a user should have access to all characters regardless of visibility and flagging status.
+     * @param user  the currently authenticated user (null if guest)
+     * @return true if the user is an admin, false otherwise
+     */
     private boolean isAdmin(UserEntity user)
     {
         return user != null
