@@ -28,7 +28,7 @@ public interface CharacterRepository extends JpaRepository<CharacterEntity, Inte
         FROM CharacterEntity c
         LEFT JOIN c.race r
         LEFT JOIN c.characterClass cc
-        LEFT JOIN c.userId u
+        LEFT JOIN c.user u
         WHERE
             LOWER(c.characterName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
             LOWER(r.raceName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
